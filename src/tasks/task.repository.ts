@@ -46,7 +46,7 @@ export class TaskRepository extends Repository<Task> {
             const tasks = await queryBuilder.getMany()
             return tasks
         } catch (error) {
-            this.logger.error('Failed to get tasks for user: ' + user.username + ".  ')
+            this.logger.error('Failed to get tasks for user: ' + user.username + '.  ')
             throw new InternalServerErrorException()
         }
 
