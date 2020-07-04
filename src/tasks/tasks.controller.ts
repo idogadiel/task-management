@@ -22,9 +22,9 @@ import { Task } from './task.entity';
 import { TaskStatus } from './task.status.enum';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '../auth/user.entity';
-import { RolesGuard } from '../auth/role.guard';
+import { RolesGuard } from '../auth/configurations/role.guard';
 import { Role } from '../auth/user.const';
-import { GetUser, Roles } from '../auth/user.decorator';
+import { GetUser, Roles } from '../auth/configurations/user.decorator';
 
 @Controller('tasks')
 @UseGuards(AuthGuard())

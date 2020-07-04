@@ -3,7 +3,7 @@ import {
   ExecutionContext,
   SetMetadata,
 } from '@nestjs/common';
-import { User } from './user.entity';
+import { User } from '../user.entity';
 
 export const Roles = (...roles: number[]) => SetMetadata('roles', roles);
 
