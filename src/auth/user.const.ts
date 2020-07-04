@@ -1,3 +1,7 @@
-export const ADMIN = 3;
-export const MANAGER = 2;
-export const USER = 1;
+
+
+export enum Role {
+  ADMIN =3,
+  MANAGER =2,
+  USER =1,
+}

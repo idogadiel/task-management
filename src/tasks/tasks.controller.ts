@@ -23,7 +23,7 @@ import { TaskStatus } from './task.status.enum';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '../auth/user.entity';
 import { RolesGuard } from '../auth/role.guard';
-import { ADMIN } from '../auth/user.const';
+import { Role } from '../auth/user.const';
 import { GetUser, Roles } from '../auth/user.decorator';
 
 @Controller('tasks')
@@ -56,7 +56,7 @@ export class TasksController {
   }
 
   @Post('/')
-  @Roles(ADMIN)
+  @Roles(Role.ADMIN)
   @UseGuards(RolesGuard)
   @UsePipes(ValidationPipe)
   createTask(
