@@ -1,22 +1,22 @@
-import { Task } from './task.entity';
+import { TaskEntity } from './task.entity';
 import { EntityRepository, Repository } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskStatus } from './task.status.enum';
 import { GetTasksFilterDto } from './dto/get-tasks-filter-dto';
-import { User } from '../auth/user.entity';
+import { UserEntity } from '../auth/user.entity';
 import { InternalServerErrorException, Logger } from '@nestjs/common';
 
-@EntityRepository(Task)
-export class TaskRepository extends Repository<Task> {
+@EntityRepository(TaskEntity)
+export class TaskRepository extends Repository<TaskEntity> {
   private logger = new Logger('TaskRepository');
 
   createTask = async (
     createTaskDto: CreateTaskDto,
-    user: User,
-  ): Promise<Task> => {
+    user: UserEntity,
+  ): Promise<TaskEntity> => {
     const { title, description } = createTaskDto;
 
-    const task: Task = new Task();
+    const task: TaskEntity = new TaskEntity();
     task.title = title;
     task.description = description;
     task.status = TaskStatus.OPEN;
@@ -29,8 +29,8 @@ export class TaskRepository extends Repository<Task> {
 
   getTasks = async (
     filterDto: GetTasksFilterDto,
-    user: User,
-  ): Promise<Task[]> => {
+    user: UserEntity,
+  ): Promise<TaskEntity[]> => {
     const { status, search } = filterDto;
 
     const queryBuilder = this.createQueryBuilder('task');

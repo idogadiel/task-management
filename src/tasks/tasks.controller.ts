@@ -18,10 +18,10 @@ import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter-dto';
 import { TaskStatusValidationPipe } from './pipes/task-status-validation.pipe';
-import { Task } from './task.entity';
+import { TaskEntity } from './task.entity';
 import { TaskStatus } from './task.status.enum';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from '../auth/user.entity';
+import { UserEntity } from '../auth/user.entity';
 import { RolesGuard } from '../auth/configurations/role.guard';
 import { Role } from '../auth/user.const';
 import { GetUser, Roles } from '../auth/configurations/user.decorator';
@@ -36,7 +36,7 @@ export class TasksController {
   @Get('/')
   getTasks(
     @Query(ValidationPipe) filterDto: GetTasksFilterDto,
-    @GetUser() user: User,
+    @GetUser() user: UserEntity,
   ) {
     this.logger.verbose(
       'user ' +
@@ -50,8 +50,8 @@ export class TasksController {
   @Get('/:id')
   getTaskById(
     @Param('id', ParseUUIDPipe) id: string,
-    @GetUser() user: User,
-  ): Promise<Task> {
+    @GetUser() user: UserEntity,
+  ): Promise<TaskEntity> {
     return this.taskService.getTaskById(id, user);
   }
 
@@ -61,15 +61,15 @@ export class TasksController {
   @UsePipes(ValidationPipe)
   createTask(
     @Body() createTaskDto: CreateTaskDto,
-    @GetUser() user: User,
-  ): Promise<Task> {
+    @GetUser() user: UserEntity,
+  ): Promise<TaskEntity> {
     return this.taskService.createTask(createTaskDto, user);
   }
 
   @Delete('/:id')
   deleteTaskById(
     @Param('id', ParseIntPipe) id: string,
-    @GetUser() user: User,
+    @GetUser() user: UserEntity,
   ): Promise<void> {
     return this.taskService.deleteTaskById(id, user);
   }
@@ -78,7 +78,7 @@ export class TasksController {
   updateTaskStatusById(
     @Param('id', ParseUUIDPipe) id: string,
     @Body('status', TaskStatusValidationPipe) status: TaskStatus,
-    @GetUser() user: User,
+    @GetUser() user: UserEntity,
   ) {
     return this.taskService.updateTaskStatusById(id, status, user);
   }
