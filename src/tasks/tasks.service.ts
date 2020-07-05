@@ -26,7 +26,7 @@ export class TasksService {
       where: { id, userId: user.id },
     });
     if (!task) {
-      throw new NotFoundException('TaskEntity with id=' + id + ' not found');
+      throw new NotFoundException('TaskEntity with id=' + id + ' not found.');
     }
     return task;
   }
