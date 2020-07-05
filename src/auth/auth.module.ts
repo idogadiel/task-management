@@ -14,7 +14,7 @@ import { TokenRepository } from './token.repository';
     JwtModule.register({
       secret: 'mySecret',
       signOptions: {
-        expiresIn: 3600,
+        expiresIn: '15 minutes',
       },
     }),
     TypeOrmModule.forFeature([UserRepository, TokenRepository]),

@@ -21,8 +21,15 @@ export class TokenRepository extends Repository<TokenEntity> {
     const uuid = generateUUID();
     const tokenEntity: TokenEntity = this.create();
     tokenEntity.user = user;
-    tokenEntity.expiration = Date.now() + 1000 * 60 * 60 * 24 * 1; // 1 day
+    tokenEntity.expiration = this.getTimeInMillis(); // 1 day
     tokenEntity.id = uuid;
     return await tokenEntity.save();
   }
+
+  getTimeInMillis(){
+    // return a week from now in millis
+    const date = new Date();
+    return date.setDate(date.getDate() + 7);
+  }
+
 }
