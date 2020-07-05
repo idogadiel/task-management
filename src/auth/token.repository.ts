@@ -1,16 +1,19 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { TokenEntity } from './token.entity';
-import { AccessTokenRequestDto } from './dto/auth-credentials.dto';
+import { RefreshTokenRequestDto } from './dto/auth-credentials.dto';
 import { UserEntity } from './user.entity';
-import { v4 as generateUUID } from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 @EntityRepository(TokenEntity)
 export class TokenRepository extends Repository<TokenEntity> {
   async getRefreshToken(
-    accessTokenRequestDto: AccessTokenRequestDto,
+    accessTokenRequestDto: RefreshTokenRequestDto,
   ): Promise<TokenEntity> {
     const { refreshToken } = accessTokenRequestDto;
-    const tokenEntity: TokenEntity = await this.findOne({where: { id: refreshToken }, relations: ['user']});
+    const tokenEntity = await this.findOne({
+      where: { token: refreshToken },
+      relations: ['user'],
+    });
     if (tokenEntity) {
       return tokenEntity;
     }
@@ -18,18 +21,17 @@ export class TokenRepository extends Repository<TokenEntity> {
   }
 
   async createRefreshToken(user: UserEntity): Promise<TokenEntity> {
-    const uuid = generateUUID();
+    const token = Buffer.from(uuid() + uuid()).toString('base64');
     const tokenEntity: TokenEntity = this.create();
     tokenEntity.user = user;
     tokenEntity.expiration = this.getTimeInMillis(); // 1 day
-    tokenEntity.id = uuid;
+    tokenEntity.token = token;
     return await tokenEntity.save();
   }
 
-  getTimeInMillis(){
+  getTimeInMillis() {
     // return a week from now in millis
     const date = new Date();
     return date.setDate(date.getDate() + 7);
   }
-
 }

@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AccessTokenRequestDto } from './dto/auth-credentials.dto';
+import { RefreshTokenRequestDto } from './dto/auth-credentials.dto';
 import { JwtService } from '@nestjs/jwt';
 import { TokenRepository } from './token.repository';
 import { AuthCredentialsDto } from './dto/access-token.dto';
@@ -26,16 +26,15 @@ export class AuthService {
     }
     const tokenEntity = await this.tokenRepository.createRefreshToken(user);
     return {
-      refresh_token: tokenEntity.id,
+      refresh_token: tokenEntity.token,
     };
   }
 
-  async getAccessToken(
-    accessTokenRequestDto: AccessTokenRequestDto,
+  async refreshToken(
+    refreshTokenDto: RefreshTokenRequestDto,
   ): Promise<TokenInterface> {
-
     const tokenEntity = await this.tokenRepository.getRefreshToken(
-      accessTokenRequestDto,
+      refreshTokenDto,
     );
     if (!tokenEntity || !tokenEntity.user) {
       throw new UnauthorizedException('Invalid Credentials');
@@ -44,7 +43,6 @@ export class AuthService {
       await tokenEntity.remove();
       throw new UnauthorizedException('Invalid Credentials');
     }
-
     const token = this.jwtService.sign({ username: tokenEntity.user.username });
     return {
       access_token: token,
@@ -58,7 +56,7 @@ export class AuthService {
     }
     const tokenEntity = await this.tokenRepository.createRefreshToken(user);
     return {
-      refresh_token: tokenEntity.id,
+      refresh_token: tokenEntity.token,
     };
   }
 }

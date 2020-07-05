@@ -1,7 +1,7 @@
 import { Body, Controller, Post, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthCredentialsDto } from './dto/access-token.dto';
-import { AccessTokenRequestDto } from './dto/auth-credentials.dto';
+import { RefreshTokenRequestDto } from './dto/auth-credentials.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -17,10 +17,10 @@ export class AuthController {
     return this.authService.signIn(authCredentialsDto);
   }
 
-  @Post('/accessToken')
+  @Post('/refreshToken')
   async getAccessToken(
-    @Body(ValidationPipe) accessTokenDto: AccessTokenRequestDto,
+    @Body(ValidationPipe) refreshTokenDto: RefreshTokenRequestDto,
   ) {
-    return this.authService.getAccessToken(accessTokenDto);
+    return this.authService.refreshToken(refreshTokenDto);
   }
 }

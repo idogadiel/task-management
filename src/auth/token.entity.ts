@@ -1,20 +1,14 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  Unique,
-} from 'typeorm';
-import * as bcrypt from 'bcrypt/bcrypt.js';
-import { TaskEntity } from '../tasks/task.entity';
+import { BaseEntity, Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserEntity } from './user.entity';
 
 @Entity()
+@Index(['token'])
 export class TokenEntity extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn('increment')
   id: string;
+
+  @Column({ type: 'varchar' })
+  token: string;
 
   @Column({ type: 'bigint' })
   expiration: number;
