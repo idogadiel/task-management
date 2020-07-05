@@ -1,7 +1,8 @@
 import { Body, Controller, Post, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthCredentialsDto } from './dto/access-token.dto';
-import { RefreshTokenRequestDto } from './dto/auth-credentials.dto';
+import { SignOutRequestDto } from './dto/delete-token.dto';
+import { AuthCredentialsDto } from './dto/auth-credentials.dto';
+import { RefreshTokenRequestDto } from './dto/refresh-token.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -22,5 +23,10 @@ export class AuthController {
     @Body(ValidationPipe) refreshTokenDto: RefreshTokenRequestDto,
   ) {
     return this.authService.refreshToken(refreshTokenDto);
+  }
+
+  @Post('/signout')
+  async signOut(@Body(ValidationPipe) signOutRequestDto: SignOutRequestDto) {
+    return this.authService.signOut(signOutRequestDto);
   }
 }

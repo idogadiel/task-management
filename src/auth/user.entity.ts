@@ -11,13 +11,13 @@ import { TaskEntity } from '../tasks/task.entity';
 import { TokenEntity } from './token.entity';
 
 @Entity()
-@Unique(['username'])
+@Unique(['email'])
 export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
-  username: string;
+  email: string;
 
   @Column()
   password: string;

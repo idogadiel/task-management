@@ -1,14 +1,17 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RefreshTokenRequestDto } from './dto/auth-credentials.dto';
 import { JwtService } from '@nestjs/jwt';
 import { TokenRepository } from './token.repository';
-import { AuthCredentialsDto } from './dto/access-token.dto';
+import { SignOutRequestDto } from './dto/delete-token.dto';
 import { TokenInterface } from './dto/token.interface';
+import { RefreshTokenRequestDto } from './dto/refresh-token.dto';
+import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 
 @Injectable()
 export class AuthService {
+  private logger = new Logger('AuthService');
+
   constructor(
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
@@ -37,13 +40,14 @@ export class AuthService {
       refreshTokenDto,
     );
     if (!tokenEntity || !tokenEntity.user) {
+      this.logger.warn('tokenEntity was empty or without user');
       throw new UnauthorizedException('Invalid Credentials');
     }
     if (tokenEntity.isExpired()) {
       await tokenEntity.remove();
       throw new UnauthorizedException('Invalid Credentials');
     }
-    const token = this.jwtService.sign({ username: tokenEntity.user.username });
+    const token = this.jwtService.sign({ email: tokenEntity.user.email });
     return {
       access_token: token,
     };
@@ -52,11 +56,17 @@ export class AuthService {
   async signIn(authDto: AuthCredentialsDto): Promise<TokenInterface> {
     const user = await this.userRepository.validateCredentials(authDto);
     if (!user) {
+      this.logger.warn('Invalid Credentials');
       throw new UnauthorizedException('Invalid Credentials');
     }
     const tokenEntity = await this.tokenRepository.createRefreshToken(user);
     return {
       refresh_token: tokenEntity.token,
     };
+  }
+
+  async signOut(signOutRequestDto: SignOutRequestDto): Promise<void> {
+    this.tokenRepository.deleteToken(signOutRequestDto);
+    this.logger.log('Signed out');
   }
 }

@@ -40,8 +40,8 @@ export class TasksController {
   ) {
     this.logger.verbose(
       'user ' +
-        user.username +
-        'retrieving all tasks.' +
+        user.email +
+        ' retrieving all tasks.' +
         JSON.stringify(filterDto),
     );
     return this.taskService.getTasks(filterDto, user);

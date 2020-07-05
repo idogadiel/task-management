@@ -52,9 +52,7 @@ export class TaskRepository extends Repository<TaskEntity> {
       const tasks = await queryBuilder.getMany();
       return tasks;
     } catch (error) {
-      this.logger.error(
-        'Failed to get tasks for user: ' + user.username + '.  ',
-      );
+      this.logger.error('Failed to get tasks for user: ' + user.email + '.  ');
       throw new InternalServerErrorException();
     }
   };

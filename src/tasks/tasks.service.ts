@@ -49,7 +49,10 @@ export class TasksService {
     }
   }
 
-  async createTask(createTaskDto: CreateTaskDto, user: UserEntity): Promise<TaskEntity> {
+  async createTask(
+    createTaskDto: CreateTaskDto,
+    user: UserEntity,
+  ): Promise<TaskEntity> {
     return this.taskRepository.createTask(createTaskDto, user);
   }
 }
